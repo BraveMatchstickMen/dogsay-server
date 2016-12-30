@@ -7,7 +7,7 @@ var uuid = require('uuid')
 var sms = require('../service/sms')
 
 exports.signup = function *(next) {
-	var phoneNumber = this.request.body.phoneNumber
+	var phoneNumber = xss(this.request.body.phoneNumber.trim())
 
 	var user = yield User.findOne({
 		phoneNumber: phoneNumber
@@ -103,26 +103,14 @@ exports.verify = function *(next) {
 
 exports.update = function *(next) {
 	var body = this.request.body
-	var accessToken = body.accessToken
+	var user = this.session.user
 
-	var user = yield User.findOne({
-		accessToken: accessToken
-	}).exec()
-
-	if (!user) {
-		this.body = {
-			success: false,
-			err: '用户不见了'
-		}
-
-		return next
-	}
-
+    // 逗号后不加空格
 	var fields = 'avatar,gender,age,nickname,breed'.split(',')
 
 	fields.forEach(function(field) {
 		if (body[field]) {
-			user[field] = body[field]
+			user[field] = xss(body[field].trim())
 		}
 	})
 
