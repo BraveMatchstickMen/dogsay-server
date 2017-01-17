@@ -7,6 +7,8 @@ var uuid = require('uuid')
 var sms = require('../service/sms')
 
 exports.signup = function *(next) {
+	console.log(this.request.body)
+	console.log(this.request.body.phoneNumber)
 	var phoneNumber = xss(this.request.body.phoneNumber.trim())
 
 	var user = yield User.findOne({
@@ -62,8 +64,12 @@ exports.signup = function *(next) {
 }
 
 exports.verify = function *(next) {
+	console.log(this.request.body)
+
 	var verifyCode = this.request.body.verifyCode
 	var phoneNumber = this.request.body.phoneNumber
+
+	console.log(verifyCode, phoneNumber)
 
 	if (!verifyCode || !phoneNumber) {
 		this.body = {
@@ -78,6 +84,8 @@ exports.verify = function *(next) {
 		phoneNumber: phoneNumber,
 		verifyCode: verifyCode
 	}).exec()
+
+	console.log(user)
 
 	if (user) {
 		user.verified = true
