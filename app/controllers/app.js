@@ -2,36 +2,30 @@
 
 var mongoose = require('mongoose')
 var User = mongoose.model('User')
-var config = require('../../config/config')
 var sha1 = require('sha1')
+var uuid = require('uuid')
+var robot = require('../service/robot')
 
 exports.signature = function *(next) {
 	var body = this.request.body
-	var type = body.type
-	var timestamp = body.timestamp
-	var folder
-	var tags
+	var cloud = body.cloud
+	var token
+	var key
 
-	if (type === 'avatar') {
-		folder = 'avatar'
-		tags = 'app,avatar'
+	if (cloud === 'qiniu') {
+		key = uuid.v4() + '.jpeg'
+		token = robot.getQiniuToken(key)
 	}
-	else if (type === 'video') {
-		folder = 'video'
-		tags = 'app,video'
+	else {
+		token = robot.getCloudinaryToken(body)
 	}
-	else if (type === 'audio') {
-		folder = 'audio'
-		tags = 'app,audio'
-	}
-
-	var signature = 'folder=' + folder + '&tags=' + tags + '&timestamp=' + timestamp + config.cloudinary.api_secret
-
-    signature = sha1(signature)
 
 	this.body = {
 		success: true,
-		data: signature
+		data: {
+		  token: token,
+		  key: key
+		}
 	}
 }
 
