@@ -3,7 +3,6 @@
 var mongoose = require('mongoose')
 var User = mongoose.model('User')
 var sha1 = require('sha1')
-var uuid = require('uuid')
 var robot = require('../service/robot')
 
 exports.signature = function *(next) {
@@ -13,8 +12,10 @@ exports.signature = function *(next) {
 	var key
 
 	if (cloud === 'qiniu') {
-		key = uuid.v4() + '.jpeg'
-		token = robot.getQiniuToken(key)
+		var data = robot.getQiniuToken(body)
+
+		token = data.token
+		key = data.key
 	}
 	else {
 		token = robot.getCloudinaryToken(body)
