@@ -80,6 +80,12 @@ exports.getCloudinaryToken = function(body) {
 	}
 
 	var signature = 'folder=' + folder + '&tags=' + tags + '&timestamp=' + timestamp + config.cloudinary.api_secret
-
-    signature = sha1(signature)
+	var key = uuid.v4()
+	
+	signature = sha1(signature)
+	
+	return {
+		token: signature,
+		key: key
+	}
 }
