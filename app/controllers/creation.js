@@ -182,3 +182,18 @@ exports.video = function *(next) {
         data: video._id
     }
 }
+
+exports.save = function *(next) {
+    var body = this.request.body
+    var videoId = body.videoId
+    var audioId = body.audioId
+    var title = body.title
+
+    console.log(videoId)
+    console.log(audioId)
+    console.log(title)
+
+    this.body = {
+        success: true
+    }
+}
