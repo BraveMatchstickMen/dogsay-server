@@ -44,6 +44,21 @@ exports.getQiniuToken = function(body) {
 	}
 }
 
+exports.saveToQiniu = function(url, key) {
+	var client = new qiniu.rs.Client()
+
+	return new Promise(function(resolve, reject) {
+		client.fetch(url, 'gougouvideo', key, function(err, ret) {
+			if (!err) {
+				resolve(ret)
+			}
+			else {
+				reject(err)
+			}
+		})
+	})
+}
+
 exports.uploadToCloudinary = function(url) {
 	return new Promise(function(resolve, reject) {
 		cloudinary.uploader.upload(url, function(result) {
@@ -81,7 +96,7 @@ exports.getCloudinaryToken = function(body) {
 
 	var signature = 'folder=' + folder + '&tags=' + tags + '&timestamp=' + timestamp + config.cloudinary.api_secret
 	var key = uuid.v4()
-	
+
 	signature = sha1(signature)
 	
 	return {
