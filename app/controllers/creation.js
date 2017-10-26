@@ -197,7 +197,7 @@ exports.save = function *(next) {
     }).exec()
     var audio = yield Audio.findOne({
         _id: audioId
-    })
+    }).exec()
 
     if (!video || !audio) {
         this.body = {
