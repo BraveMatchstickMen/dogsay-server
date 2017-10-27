@@ -11,6 +11,40 @@ var xss = require('xss')
 var robot = require('../service/robot')
 var config = require('../../config/config')
 
+var userFields = [
+    'avatar',
+    'nickname',
+    'gender',
+    'age',
+    'breed'
+]
+
+exports.find = function *(next) {
+    var page = parseInt(this.query.page, 10) || 1
+    var count = 5
+    var offset = (page - 1) * count
+    var queryArray = [
+      Creation
+        .find({finish: 100})
+        .sort({
+            'meta.createAt': -1
+        })
+        .skit(offset)
+        .limit(count)
+        .populate('author', userFields.join(' '))
+        .exec(),
+      Creation.count({finish: 100}).exec()
+    ]
+
+    var data = yield queryArray
+
+    this.body = {
+        success: true,
+        data: data[0],
+        total: data[1]
+    }
+}
+
 function asyncMedia(videoId, audioId) {
     if (!videoId) return
 
