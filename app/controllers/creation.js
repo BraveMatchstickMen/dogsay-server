@@ -38,6 +38,8 @@ exports.find = function *(next) {
 
     var data = yield queryArray
 
+    console.log(data)
+
     this.body = {
         success: true,
         data: data[0],
