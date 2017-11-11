@@ -29,7 +29,7 @@ exports.find = function *(next) {
         .sort({
             'meta.createAt': -1
         })
-        .skit(offset)
+        .skip(offset)
         .limit(count)
         .populate('author', userFields.join(' '))
         .exec(),
