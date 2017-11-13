@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose')
 
+var _ = require('lodash')
 var User = mongoose.model('User')
 var Video = mongoose.model('Video')
 var Audio = mongoose.model('Audio')
@@ -10,6 +11,38 @@ var Promise = require('bluebird')
 var xss = require('xss')
 var robot = require('../service/robot')
 var config = require('../../config/config')
+
+exports.up = function *(next) {
+    var body = this.request.body
+    var user = this.session.user
+    var creation = yield Creation.findOne({
+        id: body._id
+    })
+    .exec()
+
+    if (!creation) {
+        this.body = {
+            success: false,
+            err: '视频找不到了！'
+        }
+
+        return next
+    }
+
+    if (body.up === 'yes') {
+        creation.votes.push(String(user._id))
+    }
+    else {
+        creation.votes = _.without(creation.votes, String(user._id))
+    }
+
+    creation.up = creation.votes.length
+    yield creation.save()
+
+    this.body = {
+        success: true
+    }
+}
 
 var userFields = [
     'avatar',

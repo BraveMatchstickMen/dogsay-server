@@ -29,5 +29,8 @@ module.exports = function() {
 	router.get('/comments', App.hasToken, Comment.find)
 	router.post('/comments', App.hasBody, App.hasToken, Comment.save)
 
+	// votes
+	router.post('/up', App.hasBody, App.hasToken, Creation.up)
+
 	return router
 }
