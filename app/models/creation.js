@@ -3,7 +3,6 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 var ObjectId = Schema.Types.ObjectId
-var Mixed = Schema.Types.Mixed
 
 var CreationSchema = new Schema({
   author: {
@@ -27,7 +26,7 @@ var CreationSchema = new Schema({
   cloudinary_thumb: String,
   cloudinary_video: String,
 
-  finsh: {
+  finish: {
       type: Number,
       default: 0
   },

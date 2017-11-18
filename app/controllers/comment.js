@@ -45,7 +45,7 @@ exports.find = function *(next) {
 }
 
 exports.save = function *(next) {
-    var commentData = this.request.body.commentData
+    var commentData = this.request.body.comment
     var user = this.session.user
     var creation = yield Creation.findOne({
         _id: commentData.creation
@@ -60,7 +60,7 @@ exports.save = function *(next) {
         return next
     }
     
-    var commentData
+    var comment
     
     if (commentData.cid) {
         comment = yield Comment.findOne({

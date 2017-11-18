@@ -58,7 +58,7 @@ exports.find = function *(next) {
     var offset = (page - 1) * count
     var queryArray = [
       Creation
-        .find({finish: 100})
+        .find({finish: 80})
         .sort({
             'meta.createAt': -1
         })
@@ -66,9 +66,8 @@ exports.find = function *(next) {
         .limit(count)
         .populate('author', userFields.join(' '))
         .exec(),
-      Creation.count({finish: 100}).exec()
+      Creation.count({finish: 80}).exec()
     ]
-
     var data = yield queryArray
 
     console.log(data)
